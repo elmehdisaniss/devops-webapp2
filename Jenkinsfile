@@ -57,11 +57,10 @@ docker images'''
     stage('Publish') {
       steps {
         script {
-          withCredentials([usernamePassword(credentialsId: 'ca-dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]){
+          docker.withRegistry('https://registry.hub.docker.com', 'ca-dockerhub') {
             sh '''
-docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-docker push sanisscaimage/webapp1-2021:$BUILD_ID
-docker push sanisscaimage/webapp1-2021:latest
+docker push sanissdockerhubrepo/webapp1-2021:$BUILD_ID
+docker push sanissdockerhubrepo/webapp1-2021:latest
 '''
           }
         }
