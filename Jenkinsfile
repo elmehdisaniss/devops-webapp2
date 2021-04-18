@@ -58,10 +58,11 @@ docker images'''
       steps {
         script {
           docker.withRegistry('https://registry.hub.docker.com', 'ca-dockerhub') {
-            sh '''
-docker push sanissdockerhubrepo/webapp1-2021:$BUILD_ID
-docker push sanissdockerhubrepo/webapp1-2021:latest
-'''
+
+            def image1= docker.build("sanissdockerhubrepo/webapp1-2021:${env.BUILD_ID}")
+            def image2= docker.build("sanissdockerhubrepo/webapp1-2021:latest")
+            image1.push()
+            image2.push()
           }
         }
 
