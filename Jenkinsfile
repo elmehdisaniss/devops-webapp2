@@ -57,13 +57,12 @@ docker images'''
     stage('Publish') {
       steps {
         script {
-          docker.withRegistry('https://registry.hub.docker.com', 'ca-dockerhub') {
-
-            def image1= docker.build("sanissdockerhubrepo/webapp1-2021:${env.BUILD_ID}")
-            def image2= docker.build("sanissdockerhubrepo/webapp1-2021:latest")
-            /* Push the container to the custom Registry */
-            image1.push()
-            image2.push()
+          withCredentials('https://registry.hub.docker.com', 'ca-dockerhub') {
+            sh '''
+docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" registry.hub.docker.com
+docker push sanissdockerhubrepo/webapp1-2021:$BUILD_ID
+docker push sanissdockerhubrepo/webapp1-2021:latest
+'''
           }
         }
 
