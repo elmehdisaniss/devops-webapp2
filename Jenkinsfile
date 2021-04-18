@@ -16,12 +16,11 @@ pipeline {
       parallel {
         stage('Build') {
           steps {
-            sh '''whoami
-date
-echo $PATH
+            sh '''RELEASE=webapp.war
 pwd
-ls -la
-./gradlew build --info'''
+./gradlew build -PwarName=$RELEASE --info
+ls -la build/libs/
+cp ./build/libs/$RELEASE ./docker'''
           }
         }
 
@@ -45,9 +44,28 @@ echo run parallel!!
       }
     }
 
+    stage('Packaging') {
+      steps {
+        sh '''pwd
+cd ./docker
+docker build -t sanissdockerhubrepo/webapp1-2021:$BUILD_ID .
+docker tag sanissdockerhubrepo/webapp1-2021:$BUILD_ID sanissdockerhubrepo/webapp1-2021:latest
+docker images'''
+      }
+    }
+
     stage('Publish') {
       steps {
-        archiveArtifacts(artifacts: 'build/libs/*.war', fingerprint: true, onlyIfSuccessful: true)
+        script {
+          withCredentials([usernamePassword(credentialsId: 'ca-dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]){
+            sh '''
+docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+docker push sanissdockerhubrepo/webapp1-2021:$BUILD_ID
+docker push sanissdockerhubrepo/webapp1-2021:latest
+'''
+          }
+        }
+
       }
     }
 
