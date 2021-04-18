@@ -57,11 +57,9 @@ docker images'''
     stage('Publish') {
       steps {
         script {
-          docker.withRegistry('index.docker.io', 'ca-dockerhub') {
-            sh '''
-docker push sanissdockerhubrepo/webapp1-2021:$BUILD_ID
-docker push sanissdockerhubrepo/webapp1-2021:latest
-'''
+          docker.withRegistry('https://registry.hub.docker.com', 'ca-dockerhub') {
+            app.push("${env.BUILD_ID}")
+            app.push("latest")
           }
         }
 
