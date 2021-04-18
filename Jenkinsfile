@@ -48,8 +48,8 @@ echo run parallel!!
       steps {
         sh '''pwd
 cd ./docker
-docker build -t sanissdockerhubrepo/webapp1-2021:$BUILD_ID .
-docker tag sanissdockerhubrepo/webapp1-2021:$BUILD_ID sanissdockerhubrepo/webapp1-2021:latest
+docker build -t sanisscaimage/webapp1-2021:$BUILD_ID .
+docker tag sanisscaimage/webapp1-2021:$BUILD_ID sanisscaimage/webapp1-2021:latest
 docker images'''
       }
     }
@@ -60,8 +60,8 @@ docker images'''
           withCredentials([usernamePassword(credentialsId: 'ca-dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]){
             sh '''
 docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-docker push sanissdockerhubrepo/webapp1-2021:$BUILD_ID
-docker push sanissdockerhubrepo/webapp1-2021:latest
+docker push sanisscaimage/webapp1-2021:$BUILD_ID
+docker push sanisscaimage/webapp1-2021:latest
 '''
           }
         }
