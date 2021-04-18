@@ -57,7 +57,7 @@ docker images'''
     stage('Publish') {
       steps {
         script {
-          docker.withRegistry('https://registry.hub.docker.com', 'ca-dockerhub') {
+          docker.withRegistry('https://hub.docker.com/orgs', 'ca-dockerhub') {
             sh '''
 docker push sanissdockerhubrepo/webapp1-2021:$BUILD_ID
 docker push sanissdockerhubrepo/webapp1-2021:latest
